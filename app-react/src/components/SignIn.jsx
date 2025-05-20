@@ -1,5 +1,7 @@
+
 import Button from "./Button";
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import '../styles/Connexion.css'; // Assurez-vous d'importer le même CSS que pour Login
 
 function SignIn({ onCancelClick, onSuccess }) {
@@ -9,6 +11,7 @@ function SignIn({ onCancelClick, onSuccess }) {
     const [identifiant, setIdentifiant] = useState('');
     const [mdp, setMdp] = useState('');
     const [confirmMdp, setConfirmMdp] = useState('');
+    const navigate = useNavigate();
 
     const handleSignIn = (e) => {
         e.preventDefault();
@@ -123,7 +126,7 @@ function SignIn({ onCancelClick, onSuccess }) {
             <button 
                 className="btn block-cube block-cube-hover" 
                 type="button"
-                onClick={onCancelClick}
+                onClick={() => navigate('/login')} // Navigation directe
                 style={{ marginTop: '15px' }}
             >
                 <div className="bg-top"><div className="bg-inner"></div></div>
@@ -136,3 +139,5 @@ function SignIn({ onCancelClick, onSuccess }) {
 }
 
 export default SignIn;
+
+

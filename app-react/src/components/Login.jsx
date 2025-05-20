@@ -1,10 +1,12 @@
 import Button from "./Button"
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import '../styles/Connexion.css';
 
 function Login({ onSignInClick, onLoginSuccess }) {
     const [identifiant, setIdentifiant] = useState('');
     const [mdp, setMdp] = useState('');
+    const navigate = useNavigate();
 
     const getIdentifiant = (evt) => { setIdentifiant(evt.target.value) };
     const getMdp = (evt) => { setMdp(evt.target.value) };
@@ -12,14 +14,14 @@ function Login({ onSignInClick, onLoginSuccess }) {
     const handleLogin = (e) => {
         e.preventDefault();
         
-        const user = JSON.parse(localStorage.getItem('user'));
+        const user = JSON.parse(localStorage.getItem('users'));
     
         if (user && user.identifiant === identifiant && user.mdp === mdp) {
           onLoginSuccess(user); // Appelé quand la connexion réussit
         } else {
           alert("Identifiant ou mot de passe incorrect !");
         }
-    };
+      };
 
     return (
         //formulaire
@@ -92,7 +94,7 @@ function Login({ onSignInClick, onLoginSuccess }) {
             <button 
                 className="btn block-cube block-cube-hover" 
                 type="button"
-                onClick={onSignInClick}
+                onClick={() => navigate('/signin')} // Navigation directe
                 style={{ marginTop: '15px' }}
             >
                 <div className="bg-top">
@@ -111,3 +113,4 @@ function Login({ onSignInClick, onLoginSuccess }) {
 }
 
 export default Login;
+

@@ -1,0 +1,213 @@
+/* Profil.css */
+.text-prof {
+    color: #333; /* Couleur foncée pour le texte */
+    z-index: 10; /* Au-dessus des éléments de fond */
+    position: relative;
+    background: transparent; /* Fond transparent pour le texte */
+}
+
+.profil-container {
+    width: 100%;
+    max-width: 600px;
+    padding: 2rem;
+    margin: 0 auto;
+    background-color: #f8d8d8;
+    color: #333; /* Couleur texte principale */
+    font-family: monospace, serif;
+    letter-spacing: 0.05em;
+    position: relative;
+}
+
+.profil-container h1 {
+    font-size: 2rem;
+    text-align: center;
+    margin-bottom: 2rem;
+    color: #333;
+    position: relative;
+}
+
+.informations {
+    background: rgba(255, 255, 255, 0.7);
+    padding: 2rem;
+    border-radius: 5px;
+    margin-bottom: 2rem;
+    position: relative;
+}
+
+.informations p {
+    margin: 1.5rem 0;
+    font-size: 0.9rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #333; /* Couleur texte foncée */
+    z-index: 2;
+    position: relative;
+}
+
+/* Style des boutons */
+button {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-family: monospace, serif;
+    letter-spacing: 0.05em;
+    position: relative;
+    padding: 0.5rem 1rem;
+    margin: 0.5rem 0;
+    color: #333;
+    font-weight: bold;
+}
+
+.block-cube-prof {
+    position: relative;
+    margin: 1rem 0;
+}
+
+.block-cube-prof .bg-top-prof {
+    position: absolute;
+    height: 8px;
+    background: linear-gradient(90deg, rgba(173, 216, 230, 1) 0%, rgba(255, 223, 186, 1) 37%, rgba(255, 182, 193, 1) 94%);
+    bottom: 100%;
+    left: 4px;
+    right: -4px;
+    transform: skew(-45deg, 0);
+    margin: 0;
+}
+
+.block-cube-prof .bg-prof {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(90deg, rgba(173, 216, 230, 1) 0%, rgba(255, 223, 186, 1) 37%, rgba(255, 182, 193, 1) 94%);
+}
+
+.block-cube-prof .bg-right-prof {
+    position: absolute;
+    background: rgba(0, 212, 255, 1);
+    top: -4px;
+    z-index: 0;
+    bottom: 4px;
+    width: 8px;
+    left: 100%;
+    transform: skew(0, -45deg);
+}
+
+.block-cube-prof .bg-inner-prof {
+    background: #f8d8d8;
+    position: absolute;
+    left: 2px;
+    top: 2px;
+    right: 2px;
+    bottom: 2px;
+}
+
+.block-cube-prof .text-prof {
+    position: relative;
+    z-index: 2;
+}
+
+/* Style des inputs en mode édition */
+.informations input {
+    width: 70%;
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    font-family: monospace, serif;
+    color: #333 !important; /* Force la couleur du texte */
+    background: rgba(255, 255, 255, 0.9) !important;
+    z-index: 10;
+    position: relative;
+}
+
+.bg-inner-prof {
+    background: rgba(248, 216, 216, 0.7) !important; /* Plus transparent */
+    opacity: 0.7;
+}
+
+/* Boutons d'action */
+.action-buttons {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+/* Animation au hover */
+.block-cube-prof:hover .bg-inner-prof {
+    background: rgba(255, 255, 255, 0.8);
+    transition: all 0.2s ease-in-out;
+}
+
+/* Style pour le formulaire de changement de mot de passe */
+.password-change-form {
+    margin-top: 20px;
+    position: relative;
+    z-index: 10; /* Au dessus des décors */
+}
+
+.password-change-form label {
+    display: block;
+    margin: 10px 0 5px;
+    font-weight: bold;
+    color: #333 !important; /* Couleur foncée forcée */
+    margin-bottom: 8px;
+    position: relative;
+    z-index: 20; /* Superposition élevée */
+    text-shadow: 0 0 2px rgba(255,255,255,0.7); /* Contour pour lisibilité */
+}
+
+/* Style pour les inputs du mot de passe */
+.password-change-form input {
+    width: 100%;
+    padding: 10px;
+    margin: 5px 0;
+    font-family: monospace;
+    position: relative;
+    z-index: 15;
+    background: rgba(255,255,255,0.9) !important;
+    color: #333 !important;
+    border: 1px solid #ccc;
+}
+
+.password-change-btn {
+    margin-top: 20px;
+    width: 250px;
+    
+}
+
+.password-change-form button {
+    position: relative;
+    z-index: 20;
+}
+
+/* Ajustement des éléments décoratifs */
+.password-change-form .block-cube-prof .bg-inner-prof {
+    background: rgba(255,255,255,0.5) !important; /* Fond plus clair */
+    opacity: 0.8;
+}
+
+/* Texte dans les boutons */
+.password-change-form .text-prof {
+    color: #333 !important;
+    text-shadow: 0 0 2px rgba(255,255,255,0.7);
+}
+
+
+
+/* Responsive */
+@media (max-width: 768px) {
+    .profil-container {
+        padding: 1rem;
+    }
+    
+    .informations p {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .informations button {
+        margin-top: 0.5rem;
+    }
+}
