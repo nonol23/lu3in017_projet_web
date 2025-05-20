@@ -20,8 +20,8 @@ function SignIn({ onCancelClick, onSuccess }) {
           return;
         }
     
-        const user = { prenom, nom, email, identifiant, mdp };
-        localStorage.setItem('user', JSON.stringify(user));
+        const user = { prenom, nom, email, identifiant, mdp, role: email === 'admin@example.com' ? 'admin' : 'user'};
+        localStorage.setItem(`user_${identifiant}`, JSON.stringify(user));
         onSuccess(user); // Appelé après inscription réussie
     };
 
@@ -139,5 +139,31 @@ function SignIn({ onCancelClick, onSuccess }) {
 }
 
 export default SignIn;
+
+
+
+
+// Dans handleSignIn (SignIn.jsx) pour validation
+/*const handleSignIn = (e) => {
+  e.preventDefault();
+  if (mdp !== confirmMdp) {
+    alert("Les mots de passe sont différents !");
+    return;
+  }
+
+  const user = { 
+    prenom, 
+    nom, 
+    email, 
+    identifiant, 
+    mdp,
+    status: 'pending' // Nouveau champ
+  };
+  
+  // Sauvegarde dans une liste d'attente
+  const pendingUsers = JSON.parse(localStorage.getItem('pendingUsers')) || [];
+  localStorage.setItem('pendingUsers', JSON.stringify([...pendingUsers, user]));
+  alert("Votre inscription est en attente de validation par un administrateur");
+};*/
 
 

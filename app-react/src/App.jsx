@@ -5,6 +5,8 @@ import SignIn from "./components/SignIn";
 import Home from "./components/Home";
 import Profil from "./components/Profil";
 import CreateTopic from "./components/CreateTopic";
+import Validation from "./components/Validation"
+import AdminHome from "./components/AdminHome"
 
 const App = () => {
   const [currentUser, setCurrentUser] = useState(null);
@@ -30,9 +32,10 @@ const App = () => {
     // Vérifier si l'utilisateur existe et que les identifiants correspondent
     if (savedUser && savedUser.identifiant === user.identifiant && savedUser.mdp === user.mdp) {
         setCurrentUser({
-          ...savedUser,
-          username: savedUser.identifiant // Ajout pour la cohérence
-        });
+        ...savedUser,
+        username: savedUser.identifiant,
+        role: savedUser.role || 'user' // Garde le rôle existant ou 'user' par défaut
+      });
     } else {
         alert("Identifiants incorrects");
     }
@@ -174,13 +177,28 @@ const App = () => {
             }
           />
 
-          {/* Route pour l'inscription - MODIFIÉE POUR SIGNIN */}
+          {/* Route pour l'inscription */}
           <Route
             path="/signin"
             element={
               currentUser ? 
                 <Navigate to="/" replace /> : 
                 <SignIn onSuccess={handleSignInSuccess} /> 
+            }
+          />
+
+          {/* Route pour adminhome*/}
+          <Route 
+            path="/admin"
+            element={
+              currentUser?.role === 'admin' ? 
+                <AdminHome 
+                  user={currentUser}
+                  onLogout={handleLogout}
+                  topics={topics}
+                  setTopics={setTopics}
+                /> : 
+                <Navigate to="/" />
             }
           />
         </Routes>

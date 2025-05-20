@@ -1,4 +1,6 @@
 import { useNavigate } from 'react-router-dom';
+import Validation from "./Validation";
+import AdminHome from "./AdminHome"
 
 const Home = ({ user, onLogout, topics }) => {
   const navigate = useNavigate();
@@ -11,6 +13,20 @@ const Home = ({ user, onLogout, topics }) => {
         <button onClick={onLogout}>Déconnexion</button>
         <button onClick={() => navigate('/profil')}>Profil</button>
         <button onClick={() => navigate('/create-topic')}>Créer un sujet</button>
+        {user?.role?.toLowerCase() === 'admin' && (
+          <button 
+            onClick={() => navigate('/admin')}
+            style={{ 
+              backgroundColor: '#4CAF50', 
+              color: 'white',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '5px'
+            }}
+          >
+            <span></span> Espace Admin
+          </button>
+        )}
       </div>
 
       <h2>Sujets de discussion</h2>

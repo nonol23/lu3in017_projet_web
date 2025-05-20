@@ -1,15 +1,62 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../AuthContext';
 
 const CreateTopic = ({ onCancelClick, onSubmit }) => {
+  const { user } = useAuth();
   const [topicName, setTopicName] = useState('');
   const [content, setContent] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState(null);
 
-  const handleSubmit = (e) => {
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (topicName.trim() && content.trim()) {
-      onSubmit({ topicName, content });
+    setError(null);
+    
+    // Validation client
+    if (!topicName.trim() || !content.trim()) {
+      setError('Veuillez remplir tous les champs');
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      const response = await fetch('http://localhost:5000/api/topic/create', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          topicName,
+          content,
+          userId: user._id
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Erreur lors de la création');
+      }
+
+      const data = await response.json();
+      
+      // Réinitialisation après succès
       setTopicName('');
       setContent('');
+      
+      if (onSubmit) {
+        onSubmit(data.topic);
+      }
+      
+      // Navigation seulement après succès
+      navigate(-1);
+      
+    } catch (err) {
+      console.error("Erreur création topic:", err);
+      setError(err.message || 'Une erreur est survenue');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -17,6 +64,7 @@ const CreateTopic = ({ onCancelClick, onSubmit }) => {
     <form className="form" onSubmit={handleSubmit}>
       <div className="control">
         <h1>Créer un sujet</h1>
+        {error && <div className="error-message" style={{color: 'red'}}>{error}</div>}
       </div>
 
       <div className="control block-cube block-input">
@@ -27,39 +75,54 @@ const CreateTopic = ({ onCancelClick, onSubmit }) => {
           value={topicName}
           onChange={(e) => setTopicName(e.target.value)}
           required
+          disabled={isSubmitting}
         />
-        <input
-          id="contenu"
-          type="text"
-          placeholder="Contenu du sujet"
-          value={content}
-          onChange={(e) => setContent(e.target.value)}
-          required
-        />
-
         <div className="bg-top"><div className="bg-inner" /></div>
         <div className="bg-right"><div className="bg-inner" /></div>
         <div className="bg"><div className="bg-inner" /></div>
       </div>
 
-      <button className="btn block-cube block-cube-hover" type="submit">
+      <div className="control block-cube block-input">
+        <input
+          id="contenu"
+          placeholder="Contenu du sujet"
+          value={content}
+          onChange={(e) => setContent(e.target.value)}
+          required
+          disabled={isSubmitting}
+          rows={5}
+        />
         <div className="bg-top"><div className="bg-inner" /></div>
         <div className="bg-right"><div className="bg-inner" /></div>
         <div className="bg"><div className="bg-inner" /></div>
-        <div className="text">Créer</div>
-      </button>
+      </div>
 
-      <button
-        type="button"
-        className="btn block-cube block-cube-hover"
-        onClick={onCancelClick}
-        style={{ marginTop: '10px' }}
-      >
-        <div className="bg-top"><div className="bg-inner" /></div>
-        <div className="bg-right"><div className="bg-inner" /></div>
-        <div className="bg"><div className="bg-inner" /></div>
-        <div className="text">Annuler</div>
-      </button>
+      <div className="button-group">
+        <button 
+          className="btn block-cube block-cube-hover" 
+          type="submit"
+          disabled={isSubmitting}
+        >
+          <div className="bg-top"><div className="bg-inner" /></div>
+          <div className="bg-right"><div className="bg-inner" /></div>
+          <div className="bg"><div className="bg-inner" /></div>
+          <div className="text">
+            {isSubmitting ? 'Création en cours...' : 'Créer'}
+          </div>
+        </button>
+
+        <button
+          type="button"
+          className="btn block-cube block-cube-hover"
+          onClick={() => navigate(-1)}
+          disabled={isSubmitting}
+        >
+          <div className="bg-top"><div className="bg-inner" /></div>
+          <div className="bg-right"><div className="bg-inner" /></div>
+          <div className="bg"><div className="bg-inner" /></div>
+          <div className="text">Annuler</div>
+        </button>
+      </div>
     </form>
   );
 };
