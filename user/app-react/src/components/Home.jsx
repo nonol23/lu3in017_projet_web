@@ -1,6 +1,5 @@
 import { useNavigate, Link } from 'react-router-dom';
-import Validation from "./Validation";
-import AdminHome from "./AdminHome"
+import SearchBar from "./SearchBar";
 
 const Home = ({ user, onLogout, topics }) => {
   const navigate = useNavigate();
@@ -8,6 +7,8 @@ const Home = ({ user, onLogout, topics }) => {
   return (
     <div className="home-container">
       <h1>Bienvenue {user.prenom}</h1>
+
+      <SearchBar currentUser={user} />
       
       <div className="action-buttons">
 
