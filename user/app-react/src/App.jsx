@@ -6,14 +6,18 @@ import Login from "./components/Login";
 import SignIn from "./components/SignIn";
 import Home from "./components/Home";
 import CreateTopic from "./components/CreateTopic";
+import EditTopic from "./components/EditTopic";
+import EditMessage from "./components/EditMessage";
 import TopicDetail from './components/TopicDetails';
 import Profil from "./components/Profil";
 import Validation from "./components/Validation"
 import AdminHome from "./components/AdminHome"
+import PublicProfil from './components/PublicProfil';
 
 const App = () => {
   const { user, setUser } = useAuth();  // user du contexte
   const [topics, setTopics] = useState([]);
+  
 
   /*      Pour les Topics           */
   useEffect(() => {
@@ -35,6 +39,26 @@ const App = () => {
       }
     };
   
+    if (user) fetchTopics();
+  }, [user]);
+
+  const fetchTopics = async () => {
+    try {
+      const res = await fetch('http://localhost:5000/api/topics', {
+        headers: { 
+          'Authorization': `Bearer ${localStorage.getItem('token')}` 
+        }
+      });
+      if (!res.ok) throw new Error('Erreur réseau');
+      const data = await res.json();
+      setTopics(data.topics || []);
+    } catch (err) {
+      console.error('Erreur récupération topics:', err);
+      setTopics([]);
+    }
+  };
+  
+  useEffect(() => {
     if (user) fetchTopics();
   }, [user]);
 
@@ -113,7 +137,7 @@ const App = () => {
             path="/"
             element={
               user ? (
-                <Home user={user} onLogout={handleLogout} topics={topics} />
+                <Home user={user} onLogout={handleLogout} topics={topics} setTopics={setTopics} />
               ) : (
                 <Navigate to="/login" />
               )
@@ -122,19 +146,22 @@ const App = () => {
 
           {/* Route pour le profil */}
           <Route
-            path="/profil"
-            element={
-              user ? (
-                <Profil
-                  user={user}
-                  onUpdate={handleUpdateProfile}
-                  onPasswordChange={handlePasswordChange}
-                />
-              ) : (
-                <Navigate to="/login" />
-              )
-            }
-          />
+  path="/profil"
+  element={
+    user ? (
+      <Profil
+        user={user}
+        onUpdate={handleUpdateProfile}
+        onPasswordChange={handlePasswordChange}
+        topics={topics}
+        setTopics={setTopics}
+        refreshTopics={fetchTopics} // Assurez-vous que cette ligne est présente
+      />
+    ) : (
+      <Navigate to="/login" />
+    )
+  }
+/>
 
 
           {/*      Pour les ajouts de sujets           */}
@@ -187,6 +214,10 @@ const App = () => {
                 <Navigate to="/" />
             }
           />
+          
+          <Route path="/edit-topic/:topicId" element={user ? (<EditTopic user={user} refreshTopics={fetchTopics}  />) : (<Navigate to="/login" />)} />
+          <Route path="/edit-message/:messageId" element={<EditMessage user={user} />} />
+          <Route path="/public-profil/:userId" element={<PublicProfil />} />
         </Routes>
       </div>
   );

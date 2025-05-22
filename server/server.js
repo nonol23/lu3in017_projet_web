@@ -54,6 +54,8 @@ app.use('/api', topicRoutes);
 const messageRoutes = require('./routes/messageRoutes');
 app.use('/api/messages', messageRoutes);
 
+const searchRoutes = require('./routes/searchRoutes');
+app.use('/api/search', searchRoutes);
 
 // Lancer le serveur
 app.listen(5000, () => {

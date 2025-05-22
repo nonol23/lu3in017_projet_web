@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 
 const TopicDetails = ({ topics }) => {
@@ -10,25 +10,45 @@ const TopicDetails = ({ topics }) => {
   const [newMessage, setNewMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [topic, setTopic] = useState(null);
+  const [loadingTopic, setLoadingTopic] = useState(true);
 
-
-  const topic = topics.find(t => t._id === id);  // Cherchez par _id
-  console.log('Topic trouvé:', topic); // Ajoutez cette ligne
 
   useEffect(() => {
     const fetchMessages = async () => {
       try {
-        const res = await fetch(`http://localhost:5000/api/messages/${id}`);
+        const res = await fetch(`http://localhost:5000/api/messages/topic/${id}`); // Correspond à la nouvelle route
+        if (!res.ok) throw new Error('Erreur lors du chargement des messages');
         const data = await res.json();
-        setMessages(data);
+        setMessages(Array.isArray(data) ? data : []);
       } catch (err) {
         console.error('Erreur chargement messages:', err);
         setError('Erreur lors du chargement des messages');
       }
     };
-
+  
     if (id) fetchMessages();
   }, [id]);
+  
+  // Et pour trouver le topic :
+  useEffect(() => {
+    const fetchTopic = async () => {
+      setLoadingTopic(true);
+      try {
+        const res = await fetch(`http://localhost:5000/api/topics/${id}`);
+        if (!res.ok) throw new Error('Erreur chargement sujet');
+        const data = await res.json();
+        setTopic(data);
+      } catch (err) {
+        console.error(err);
+        setTopic(null);
+      } finally {
+        setLoadingTopic(false);
+      }
+    };
+    if (id) fetchTopic();
+  }, [id]);
+  console.log('Topic trouvé:', topic); // Ajoutez cette ligne
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -77,7 +97,7 @@ const TopicDetails = ({ topics }) => {
 
   return (
     <div style={{ padding: '2rem' }}>
-      <button onClick={() => navigate(-1)}>← Retour</button>
+      <button onClick={() => navigate('/')}>← Retour</button>
       <h1>{topic.subject}</h1>
       <p style={{ whiteSpace: 'pre-wrap' }}>{topic.content || 'Pas de contenu.'}</p>
       <p>
@@ -118,8 +138,11 @@ const TopicDetails = ({ topics }) => {
               <li key={message._id} style={{ marginBottom: '1rem', padding: '1rem', border: '1px solid #eee' }}>
                 <p style={{color: "grey"}}>{message.content}</p>
                 <small style={{color: "grey"}}>
-                  Par {message.author?.prenom} le {new Date(message.createdAt).toLocaleString()}
+                  Par <Link to={`/public-profil/${message.author?._id}`}> {message.author?.prenom} </Link> 
+                   le {new Date(message.createdAt).toLocaleString()}
+                  
                 </small>
+                <button onClick={() => navigate(`/edit-message/${message._id}`)}>🖋️</button>
               </li>
             ))}
           </ul>

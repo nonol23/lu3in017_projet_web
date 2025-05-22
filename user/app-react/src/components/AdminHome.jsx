@@ -1,24 +1,48 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Navigate } from 'react-router-dom';
 import { useState } from 'react';
 import Validation from "./Validation";
 import DeleteTopic from "./DeleteTopic";
 import AdminManagement from "./AdminManagement"
+import '../styles/DeleteTopic.css';
 
 
 const AdminHome = ({ user, onLogout, topics, setTopics}) => {
   const navigate = useNavigate();
   const [users, setUsers] = useState([]);
+  const [topicToDelete, setTopicToDelete] = useState(null);
+
 
   if (user?.role !== 'admin') {return <Navigate to="/" />;}
 
-  const handleDeleteTopic = (topicId) => {
-    if (window.confirm("Êtes-vous sûr de vouloir supprimer ce sujet ?")) {
-      const updatedTopics = topics.filter(topic => topic._id !== topicId);
-      setTopics(updatedTopics);
-      
-      if (user?.username) {
-        localStorage.setItem(`topics_${user.username}`, JSON.stringify(updatedTopics));
+  const handleDeleteTopic = async () => {
+    if (!topicToDelete) return;
+  
+    try {
+      const res = await fetch(`http://localhost:5000/api/topics/${topicToDelete._id}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          user: {
+            _id: user._id,
+            role: user.role
+          }
+        })
+      });
+  
+      const data = await res.json();
+  
+      if (res.ok) {
+        setTopics(topics.filter(topic => topic._id !== topicToDelete._id));
+        alert(data.message);
+      } else {
+        alert(data.message);
       }
+    } catch (err) {
+      console.error("Erreur lors de la suppression du sujet :", err);
+    } finally {
+      setTopicToDelete(null); // ferme la modale
     }
   };
 
@@ -60,13 +84,19 @@ const AdminHome = ({ user, onLogout, topics, setTopics}) => {
                     {topic.subject} (créé par {topic.author?.prenom})
                 </button>
                 
-                <DeleteTopic
-                    topic={topic}
-                    onDelete={handleDeleteTopic}
-                />
+                <DeleteTopic onDelete={() => setTopicToDelete(topic)}/>
                 </li>
             ))}
             </ul>
+        )}
+        {topicToDelete && (
+          <div className="modal-overlay">
+            <div className="modal-content">
+              <p>Voulez-vous vraiment supprimer le sujet <strong>{topicToDelete.subject}</strong> ?</p>
+              <button onClick={handleDeleteTopic}>Oui, supprimer</button>
+              <button onClick={() => setTopicToDelete(null)}>Annuler</button>
+            </div>
+          </div>
         )}
     </div>
   );

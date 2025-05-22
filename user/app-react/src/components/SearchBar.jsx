@@ -56,6 +56,12 @@ function SearchBar({ currentUser }) {
     navigate(`/topic/${topicId}`);
   };
 
+  const handleUserClick = (userId) => {
+    setSearchTerm('');
+    setSearchResults(prev => ({ ...prev, showResults: false }));
+    navigate(`/public-profil/${userId}`);
+  };
+
   return (
     <div className="search-container">
       <div className="search-form">
@@ -97,17 +103,18 @@ function SearchBar({ currentUser }) {
             <div className="results-section">
               <h3>Utilisateurs</h3>
               <ul>
-                {searchResults.users.map(user => (
-                  <li 
-                    key={user._id} 
-                    className="result-item user-result"
-                  >
-                    <span className="result-title">
-                      {user.prenom} {user.nom}
-                    </span>
-                    <span className="result-meta">{user.email}</span>
-                  </li>
-                ))}
+              {searchResults.users.map(user => (
+                <li 
+                  key={user._id} 
+                  className="result-item user-result"
+                  onClick={() => handleUserClick(user._id)}
+                  style={{ cursor: 'pointer' }}
+                >
+                  <span className="result-title">
+                    {user.prenom} {user.nom}
+                  </span>
+                </li>
+              ))}
               </ul>
             </div>
           )}

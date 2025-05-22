@@ -1,8 +1,16 @@
 import { useNavigate, Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 import SearchBar from "./SearchBar";
 
 const Home = ({ user, onLogout, topics }) => {
+
   const navigate = useNavigate();
+
+  console.log('Home: topics', topics);
+
+  useEffect(() => {
+    console.log('Home: topics', topics);
+  }, [topics]);
 
   return (
     <div className="home-container">
@@ -39,12 +47,17 @@ const Home = ({ user, onLogout, topics }) => {
         <p>Aucun sujet pour le moment.</p>
       ) : (
         <ul>
-          {topics.map((topic) => (
+          {topics.map(topic => (
             <li key={topic._id}>
-              <Link to={`/topic/${topic._id}`}>  {/* Utilisez _id au lieu de slug */}
+              <Link to={`/topic/${topic._id}`}>
                 <strong>{topic.subject}</strong>
               </Link>
-              (créé par {topic.author?.prenom} le  {new Date(topic.createdAt).toLocaleString()})
+              (par 
+                <Link to={`/public-profil/${topic.author?._id}`}>
+                  {topic.author?.prenom}
+                </Link> 
+                le {new Date(topic.createdAt).toLocaleString()})
+
             </li>
           ))}
         </ul>

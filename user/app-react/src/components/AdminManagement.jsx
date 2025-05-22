@@ -1,7 +1,9 @@
 import { useEffect } from 'react';
+import { useAuth } from '../contexts/AuthContext';
 import '../styles/AdminManagement.css';
 
 const AdminManagement = ({ users, setUsers }) => {
+  const { user: currentUser } = useAuth();
   useEffect(() => {
     fetch('http://localhost:5000/api/users/all')
       .then(res => res.json())
@@ -17,7 +19,10 @@ const AdminManagement = ({ users, setUsers }) => {
       const res = await fetch(`/api/users/${userId}/role`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ role: newRole }),
+        body: JSON.stringify({ 
+          role: newRole, 
+          currentUserId: currentUser._id
+        }),
       });
 
       const updated = await res.json();
@@ -26,6 +31,7 @@ const AdminManagement = ({ users, setUsers }) => {
       console.error("Erreur lors du changement de rôle :", err);
     }
   };
+  
 
   return (
     <div className="user-management">

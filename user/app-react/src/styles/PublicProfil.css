@@ -1,0 +1,78 @@
+.public-profil-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.back-button {
+    background: #f0f0f0;
+    border: none;
+    padding: 8px 15px;
+    margin-bottom: 20px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.user-activity {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+}
+
+.topics-section h2, .messages-section h2 {
+    color: #333; /* gris foncé lisible */
+    margin-top: 0;
+}
+.topics-section, .messages-section {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.topic-list, .message-list {
+    list-style: none;
+    padding: 0;
+}
+
+.topic-item, .message-item {
+    padding: 15px;
+    margin-bottom: 15px;
+    border-bottom: 1px solid #eee;
+}
+
+.topic-item h3 {
+    margin-top: 0;
+    color: #333;
+}
+
+.topic-meta, .message-meta {
+    color: #666;
+    font-size: 0.9em;
+}
+
+.message-content {
+    margin-bottom: 5px;
+}
+
+.message-list, .message-content {
+    margin-top: 0;
+    color: #333;
+}
+
+.topic-link {
+    color: #4CAF50;
+    margin-left: 5px;
+}
+
+.loading, .error {
+    text-align: center;
+    padding: 50px;
+    font-size: 1.2em;
+}
+
+@media (max-width: 768px) {
+    .user-activity {
+        grid-template-columns: 1fr;
+    }
+}

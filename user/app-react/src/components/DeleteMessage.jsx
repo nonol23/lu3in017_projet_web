@@ -1,6 +1,6 @@
 import React from 'react';
 
-const DeleteTopic = ({ onDelete }) => {
+const DeleteMessage = ({ message, onDelete}) => {
   return (
     <div className="admin-actions" style={{
       display: 'flex',
@@ -8,10 +8,7 @@ const DeleteTopic = ({ onDelete }) => {
       marginLeft: '10px'
     }}>
       <button
-        onClick={(e) => {
-          e.stopPropagation();
-          onDelete();
-        }}
+        onClick={() => onDelete(message._id)}
         className="delete-btn"
         style={{
           backgroundColor: '#ff4444',
@@ -24,8 +21,9 @@ const DeleteTopic = ({ onDelete }) => {
       >
         Supprimer
       </button>
+      
     </div>
   );
 };
 
-export default DeleteTopic;
+export default DeleteMessage;
